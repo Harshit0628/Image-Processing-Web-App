@@ -2,7 +2,7 @@
 
 A powerful and visually stunning image processing web application built with Flask, OpenCV, and PIL.
 
-## Feature's
+## Features
 
 - **Modern UI**: Beautiful, responsive interface with intuitive controls
 - **Drag & Drop**: Easy image uploading with drag and drop functionality
