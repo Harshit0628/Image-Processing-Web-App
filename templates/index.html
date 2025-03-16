@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Image Processing Studio</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-image-polaroid"></i>
+                <h1>ImageLab</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-section="upload">
+                    <i class="fas fa-upload"></i>
+                    <span>Upload</span>
+                </button>
+                <button class="nav-item" data-section="filters">
+                    <i class="fas fa-magic"></i>
+                    <span>Filters</span>
+                </button>
+                <button class="nav-item" data-section="adjustments">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Adjustments</span>
+                </button>
+                <button class="nav-item" data-section="transforms">
+                    <i class="fas fa-crop-alt"></i>
+                    <span>Transforms</span>
+                </button>
+                <button class="nav-item" data-section="effects">
+                    <i class="fas fa-star"></i>
+                    <span>Effects</span>
+                </button>
+                <button class="nav-item" data-section="text">
+                    <i class="fas fa-font"></i>
+                    <span>Text</span>
+                </button>
+                <button class="nav-item" data-section="history">
+                    <i class="fas fa-history"></i>
+                    <span>History</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="resetButton" class="btn btn-outline">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+                <button id="downloadButton" class="btn btn-primary">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="app-header">
+                <h2 id="sectionTitle">Upload Image</h2>
+                <div class="view-controls">
+                    <button id="originalViewBtn" class="view-btn">
+                        <i class="fas fa-eye"></i> Original
+                    </button>
+                    <button id="splitViewBtn" class="view-btn active">
+                        <i class="fas fa-columns"></i> Split View
+                    </button>
+                    <button id="processedViewBtn" class="view-btn">
+                        <i class="fas fa-eye"></i> Processed
+                    </button>
+                </div>
+            </header>
+
+            <!-- Image Display Area -->
+            <div class="image-display-container">
+                <div id="uploadSection" class="section active">
+                    <div id="dropArea" class="drop-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h3>Drag & Drop Your Image Here</h3>
+                        <p>or</p>
+                        <label for="imageUpload" class="btn btn-primary">Choose File</label>
+                        <input type="file" id="imageUpload" accept="image/*" hidden>
+                        <p class="file-info">Supports: JPG, PNG, BMP, GIF</p>
+                    </div>
+                </div>
+
+                <div id="imagePreviewContainer" class="image-preview-container hidden">
+                    <div class="image-comparison">
+                        <div class="original-image">
+                            <img id="originalImage" src="/placeholder.svg" alt="Original Image">
+                            <div class="image-label">Original</div>
+                        </div>
+                        <div class="processed-image">
+                            <img id="processedImage" src="/placeholder.svg" alt="Processed Image">
+                            <div class="image-label">Processed</div>
+                            <div id="processingOverlay" class="processing-overlay hidden">
+                                <div class="spinner"></div>
+                                <p>Processing...</p>
+                            </div>
+                        </div>
+                        <div id="comparisonSlider" class="comparison-slider">
+                            <div class="slider-handle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control Panels -->
+            <div class="control-panels">
+                <!-- Filters Panel -->
+                <div id="filtersSection" class="section panel">
+                    <div class="filter-grid">
+                        <div class="filter-item" data-filter="none">
+                            <div class="filter-preview">
+                                <img src="/static/img/filter-none.jpg" alt="No Filter">
+                            </div>
+                            <span>None</span>
+                        </div>
+                        <div class="filter-item" data-filter="grayscale">
+                            <div class="filter-preview">
+                                <img src="/static/img/filter-grayscale.jpg" alt="Grayscale">
+                            </div>
+                            <span>Grayscale</span>
+                        </div>
+                        <div class="filter-item" data-filter="sepia">
+                            <div class="filter-preview">
+                                <img src="/static/img/filter-sepia.jpg" alt="Sepia">
+                            </div>
+                            <span>Sepia</span>
+                        </div>
+                        <div class="filter-item" data-filter="invert">
+                            <div class="filter-preview">
+                                <img src="/static/img/filter-invert.jpg" alt="Invert">
+                            </div>
+                            <span>Invert</span>
+                        </div>
+                        <div class="filter-item" data-filter="blur">
+                            <div class="filter-preview">
+                                <img src="/static/img/filter-blur.jpg" alt="Blur">
+                            </div>
+                            <span>Blur</span>
+                        </div>
+                        <div class="filter-item" data-filter="edge_detection">
+                            <div class="filter-preview">
+                                <img src="/static/img/filter-edge.jpg" alt="Edge Detection">
+                            </div>
+                            <span>Edge</span>
+                        </div>
+                        <div class="filter-item" data-filter="sharpen">
+                            <div class="filter-preview">
+                                <img src="/static/img/filter-sharpen.jpg" alt="Sharpen">
+                            </div>
+                            <span>Sharpen</span>
+                        </div>
+                        <div class="filter-item" data-filter="emboss">
+                            <div class="filter-preview">
+                                <img src="/static/img/filter-emboss.jpg" alt="Emboss">
+                            </div>
+                            <span>Emboss</span>
+                        </div>
+                        <div class="filter-item" data-filter="vintage">
+                            <div class="filter-preview">
+                                <img src="/static/img/filter-vintage.jpg" alt="Vintage">
+                            </div>
+                            <span>Vintage</span>
+                        </div>
+                        <div class="filter-item" data-filter="cool">
+                            <div class="filter-preview">
+                                <img src="/static/img/filter-cool.jpg" alt="Cool">
+                            </div>
+                            <span>Cool</span>
+                        </div>
+                        <div class="filter-item" data-filter="warm">
+                            <div class="filter-preview">
+                                <img src="/static/img/filter-warm.jpg" alt="Warm">
+                            </div>
+                            <span>Warm</span>
+                        </div>
+                        <div class="filter-item" data-filter="pencil">
+                            <div class="filter-preview">
+                                <img src="/static/img/filter-pencil.jpg" alt="Pencil Sketch">
+                            </div>
+                            <span>Pencil</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adjustments Panel -->
+                <div id="adjustmentsSection" class="section panel">
+                    <div class="adjustment-controls">
+                        <div class="control-group">
+                            <label for="brightnessSlider">Brightness</label>
+                            <div class="slider-container">
+                                <input type="range" id="brightnessSlider" min="-100" max="100" value="0" class="slider">
+                                <span class="slider-value">0</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="contrastSlider">Contrast</label>
+                            <div class="slider-container">
+                                <input type="range" id="contrastSlider" min="-100" max="100" value="0" class="slider">
+                                <span class="slider-value">0</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="saturationSlider">Saturation</label>
+                            <div class="slider-container">
+                                <input type="range" id="saturationSlider" min="-100" max="100" value="0" class="slider">
+                                <span class="slider-value">0</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="sharpnessSlider">Sharpness</label>
+                            <div class="slider-container">
+                                <input type="range" id="sharpnessSlider" min="0" max="100" value="0" class="slider">
+                                <span class="slider-value">0</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="blurSlider">Blur</label>
+                            <div class="slider-container">
+                                <input type="range" id="blurSlider" min="0" max="50" value="0" class="slider">
+                                <span class="slider-value">0</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="noiseSlider">Noise Reduction</label>
+                            <div class="slider-container">
+                                <input type="range" id="noiseSlider" min="0" max="100" value="0" class="slider">
+                                <span class="slider-value">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transforms Panel -->
+                <div id="transformsSection" class="section panel">
+                    <div class="transform-controls">
+                        <div class="control-group">
+                            <label for="rotationSlider">Rotation</label>
+                            <div class="slider-container">
+                                <input type="range" id="rotationSlider" min="0" max="360" value="0" class="slider">
+                                <span class="slider-value">0°</span>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="btn btn-secondary" data-transform="flip_horizontal">
+                                <i class="fas fa-arrows-alt-h"></i> Flip Horizontal
+                            </button>
+                            <button class="btn btn-secondary" data-transform="flip_vertical">
+                                <i class="fas fa-arrows-alt-v"></i> Flip Vertical
+                            </button>
+                        </div>
+                        <div class="control-group">
+                            <label>Resize</label>
+                            <div class="resize-controls">
+                                <div class="input-group">
+                                    <label for="resizeWidth">Width</label>
+                                    <input type="number" id="resizeWidth" placeholder="Width" min="1">
+                                </div>
+                                <div class="input-group">
+                                    <label for="resizeHeight">Height</label>
+                                    <input type="number" id="resizeHeight" placeholder="Height" min="1">
+                                </div>
+                                <button id="resizeButton" class="btn btn-secondary">
+                                    <i class="fas fa-compress-arrows-alt"></i> Resize
+                                </button>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label>Crop</label>
+                            <button id="cropButton" class="btn btn-secondary">
+                                <i class="fas fa-crop"></i> Enter Crop Mode
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Effects Panel -->
+                <div id="effectsSection" class="section panel">
+                    <div class="effects-grid">
+                        <div class="effect-item" data-effect="vignette">
+                            <div class="effect-preview">
+                                <img src="/static/img/effect-vignette.jpg" alt="Vignette">
+                            </div>
+                            <span>Vignette</span>
+                        </div>
+                        <div class="effect-item" data-effect="pixelate">
+                            <div class="effect-preview">
+                                <img src="/static/img/effect-pixelate.jpg" alt="Pixelate">
+                            </div>
+                            <span>Pixelate</span>
+                        </div>
+                        <div class="effect-item" data-effect="oil_painting">
+                            <div class="effect-preview">
+                                <img src="/static/img/effect-oil.jpg" alt="Oil Painting">
+                            </div>
+                            <span>Oil Painting</span>
+                        </div>
+                        <div class="effect-item" data-effect="cartoon">
+                            <div class="effect-preview">
+                                <img src="/static/img/effect-cartoon.jpg" alt="Cartoon">
+                            </div>
+                            <span>Cartoon</span>
+                        </div>
+                        <div class="effect-item" data-effect="watercolor">
+                            <div class="effect-preview">
+                                <img src="/static/img/effect-watercolor.jpg" alt="Watercolor">
+                            </div>
+                            <span>Watercolor</span>
+                        </div>
+                        <div class="effect-item" data-effect="posterize">
+                            <div class="effect-preview">
+                                <img src="/static/img/effect-posterize.jpg" alt="Posterize">
+                            </div>
+                            <span>Posterize</span>
+                        </div>
+                        <div class="effect-item" data-effect="halftone">
+                            <div class="effect-preview">
+                                <img src="/static/img/effect-halftone.jpg" alt="Halftone">
+                            </div>
+                            <span>Halftone</span>
+                        </div>
+                        <div class="effect-item" data-effect="glitch">
+                            <div class="effect-preview">
+                                <img src="/static/img/effect-glitch.jpg" alt="Glitch">
+                            </div>
+                            <span>Glitch</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Panel -->
+                <div id="textSection" class="section panel">
+                    <div class="text-controls">
+                        <div class="control-group">
+                            <label for="textInput">Text</label>
+                            <input type="text" id="textInput" placeholder="Enter text to add to image">
+                        </div>
+                        <div class="control-group">
+                            <label for="fontSelect">Font</label>
+                            <select id="fontSelect">
+                                <option value="Arial">Arial</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label for="fontSizeInput">Size</label>
+                            <input type="number" id="fontSizeInput" min="8" max="120" value="24">
+                        </div>
+                        <div class="control-group">
+                            <label for="textColorInput">Color</label>
+                            <input type="color" id="textColorInput" value="#ffffff">
+                        </div>
+                        <div class="control-group">
+                            <label>Position</label>
+                            <div class="position-grid">
+                                <button class="position-btn" data-position="top-left">
+                                    <i class="fas fa-arrow-up-left"></i>
+                                </button>
+                                <button class="position-btn" data-position="top">
+                                    <i class="fas fa-arrow-up"></i>
+                                </button>
+                                <button class="position-btn" data-position="top-right">
+                                    <i class="fas fa-arrow-up-right"></i>
+                                </button>
+                                <button class="position-btn" data-position="left">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <button class="position-btn" data-position="center">
+                                    <i class="fas fa-dot-circle"></i>
+                                </button>
+                                <button class="position-btn" data-position="right">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                                <button class="position-btn" data-position="bottom-left">
+                                    <i class="fas fa-arrow-down-left"></i>
+                                </button>
+                                <button class="position-btn" data-position="bottom">
+                                    <i class="fas fa-arrow-down"></i>
+                                </button>
+                                <button class="position-btn" data-position="bottom-right">
+                                    <i class="fas fa-arrow-down-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button id="addTextButton" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Text
+                        </button>
+                    </div>
+                </div>
+
+                <!-- History Panel -->
+                <div id="historySection" class="section panel">
+                    <div class="history-list" id="historyList">
+                        <!-- History items will be added here dynamically -->
+                        <div class="empty-history">
+                            <i class="fas fa-history"></i>
+                            <p>Your editing history will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Modal for Crop -->
+    <div id="cropModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Crop Image</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="crop-container">
+                    <img id="cropImage" src="/placeholder.svg" alt="Image to crop">
+                    <div id="cropBox" class="crop-box"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelCropButton" class="btn btn-outline">Cancel</button>
+                <button id="applyCropButton" class="btn btn-primary">Apply Crop</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
+
