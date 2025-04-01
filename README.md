@@ -16,7 +16,7 @@ A powerful and visually stunning image processing web application built with Fla
 - **History Tracking**: Keep track of all edits and revert to previous states
 - **Download**: Save processed images to your device
 
-## Installation
+## Instal lation
 
 1. Clone the repository:
 
